@@ -1,5 +1,6 @@
 ﻿using FHSaverMVC.Context;
 using FHSaverMVC.Middlewares;
+using FHSaverMVC.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace FHSaverMVC.Infrastructure
@@ -10,6 +11,7 @@ namespace FHSaverMVC.Infrastructure
         {
             services.AddControllersWithViews();
             services.AddDbContext<DBContext>(opt => opt.UseSqlServer(config.GetConnectionString("DbContext")));
+            services.AddScoped<IHomeRepository, HomeRepository>();
             return services;
         }
 
