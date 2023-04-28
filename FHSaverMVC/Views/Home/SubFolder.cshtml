@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "SubFolder";
+}
+@model Folder
+
+<div class="text-center">
+    <h1>
+        "Folder" - @Model.Name
+    </h1>
+</div>
+
+<div class="content">
+    <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.ParentFolderId">Back</a>
+    <ul>
+        @foreach (var folder in Model.Children)
+        {
+            <li>
+                <a asp-controller="Home" asp-action="Index" asp-route-id="@folder.Id">
+                    @folder.Name
+                </a>
+            </li>
+        }
+    </ul>
+</div>

@@ -1,4 +1,4 @@
-﻿namespace FHSaverMVC.Context.Entities
+﻿namespace FHSaverMVC.Models
 {
     public class Folder
     {

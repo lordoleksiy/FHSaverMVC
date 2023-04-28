@@ -1,4 +1,5 @@
 ﻿using FHSaverMVC.Context;
+using FHSaverMVC.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 namespace FHSaverMVC.Infrastructure
@@ -10,6 +11,12 @@ namespace FHSaverMVC.Infrastructure
             services.AddControllersWithViews();
             services.AddDbContext<DBContext>(opt => opt.UseSqlServer(config.GetConnectionString("DbContext")));
             return services;
+        }
+
+        public static IApplicationBuilder Configure(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+            return app;
         }
     }
 }
