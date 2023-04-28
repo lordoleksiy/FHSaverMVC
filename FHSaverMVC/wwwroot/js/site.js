@@ -1,4 +1,9 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿window.onload = function () {
+    document.getElementById("downloadLink").addEventListener("click", function (event) {
+        event.preventDefault();
+        var select = document.getElementById("folderchooser");
+        var value = select.options[select.selectedIndex].value;
+        window.location.href = "/Home/DownloadFile?folderName=" + encodeURIComponent(value);
+    });
+};
 
-// Write your JavaScript code.

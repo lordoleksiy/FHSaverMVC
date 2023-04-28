@@ -5,7 +5,9 @@ using FHSaverMVC.Models;
 using FHSaverMVC.Repositories;
 using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace FHSaverMVC.Controllers
 {
@@ -47,6 +49,32 @@ namespace FHSaverMVC.Controllers
 
             await _repository.WriteFileAsync(file);
             return await IndexAsync(null);
+        }
+
+        public async Task<ActionResult> DownloadFile(string folderName)
+        {
+            if (folderName.IsNullOrEmpty())
+            {
+                throw new CustomException(400, "Id not found or empty");
+            }
+
+            byte[] data = null;
+            if (folderName.Equals("All"))
+            {
+                data = await _repository.GetAllAsync();
+            }
+            else
+            {
+                if (long.TryParse(folderName, out long id))
+                {
+                    data = await _repository.GetFileById(id);
+                }
+                else
+                {
+                    throw new CustomException(400, "Invalid parameteres!");
+                }
+            }
+            return File(data, System.Net.Mime.MediaTypeNames.Text.Plain, "FolderHierarchy.txt");
         }
     }
 }

@@ -2,6 +2,7 @@
 using FHSaverMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace FHSaverMVC.Repositories
 {
@@ -85,9 +86,38 @@ namespace FHSaverMVC.Repositories
         }
         private static int SpacesCount(string item) => item.Length - item.TrimStart().Length;
 
-        public Task<byte[]> WriteToFileASync()
+        public async Task<byte[]> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var rootFolders = await _dbContext.Folders.Include(x => x.Children).Where(x => x.ParentFolderId == null).AsNoTracking().ToListAsync();
+            var text = await WriteFoldersToStringAsync(rootFolders, "", 0);
+            return Encoding.UTF8.GetBytes(text);
+        }
+
+        private async Task<string> WriteFoldersToStringAsync(IEnumerable<Folder> folders, string text, int spaces)
+        {
+            if (folders == null)
+            {
+                return text;
+            }
+            
+            
+            foreach (var folder in folders) 
+            {
+                var subfold = await _dbContext.Folders.Include(x => x.Children).SingleAsync(a => a.Id == folder.Id);
+                text += await WriteFoldersToStringAsync(subfold.Children, "".PadLeft(spaces) + folder.Name + "\n", spaces + 1);
+            }
+            return text;
+        }
+
+        public async Task<byte[]> GetFileById(long Id)
+        {
+            var folder = await _dbContext.Folders.Include(x => x.Children).SingleOrDefaultAsync(x => x.Id == Id);
+            if (folder == null)
+            {
+                throw new CustomException(400, "No such id!");
+            }
+            var text = await WriteFoldersToStringAsync(folder.Children, $"{folder.Name}\n", 1);
+            return Encoding.UTF8.GetBytes(text);
         }
     }
 }
