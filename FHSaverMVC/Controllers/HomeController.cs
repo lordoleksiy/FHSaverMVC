@@ -5,6 +5,8 @@ using FHSaverMVC.Models;
 using FHSaverMVC.Repositories;
 using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace FHSaverMVC.Controllers
@@ -49,10 +51,19 @@ namespace FHSaverMVC.Controllers
             return await IndexAsync(null);
         }
 
-        public ActionResult DownloadFile(string folderName)
+        public async Task<ActionResult> DownloadFile(string folderName)
         {
-            byte[] fileBytes = Encoding.UTF8.GetBytes("Hello World!");
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Plain, folderName+".txt");
+            if (folderName.IsNullOrEmpty())
+            {
+                throw new CustomException(400, "Id not found or empty");
+            }
+
+            byte[] data = null;
+            if (folderName.Equals("All"))
+            {
+                data = await _repository.GetAllAsync();
+            }
+            return File(data, System.Net.Mime.MediaTypeNames.Text.Plain, folderName + ".txt");
         }
     }
 }

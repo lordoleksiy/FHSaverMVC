@@ -7,6 +7,7 @@ namespace FHSaverMVC.Repositories
         public Task<IEnumerable<Folder>> GetRootFoldersAsync();
         public Task<Folder> GetByIdAsync(long Id);
         public Task WriteFileAsync(IFormFile file);
-        public Task<byte[]> WriteToFileASync();
+        public Task<byte[]> GetAllAsync();
+        public Task<byte[]> GetFileById();
     }
 }
