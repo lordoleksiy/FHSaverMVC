@@ -109,9 +109,15 @@ namespace FHSaverMVC.Repositories
             return text;
         }
 
-        public Task<byte[]> GetFileById()
+        public async Task<byte[]> GetFileById(long Id)
         {
-            throw new NotImplementedException();
+            var folder = await _dbContext.Folders.Include(x => x.Children).SingleOrDefaultAsync(x => x.Id == Id);
+            if (folder == null)
+            {
+                throw new CustomException(400, "No such id!");
+            }
+            var text = await WriteFoldersToStringAsync(folder.Children, $"{folder.Name}\n", 1);
+            return Encoding.UTF8.GetBytes(text);
         }
     }
 }

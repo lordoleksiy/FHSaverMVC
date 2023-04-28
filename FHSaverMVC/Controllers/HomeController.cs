@@ -63,7 +63,18 @@ namespace FHSaverMVC.Controllers
             {
                 data = await _repository.GetAllAsync();
             }
-            return File(data, System.Net.Mime.MediaTypeNames.Text.Plain, folderName + ".txt");
+            else
+            {
+                if (long.TryParse(folderName, out long id))
+                {
+                    data = await _repository.GetFileById(id);
+                }
+                else
+                {
+                    throw new CustomException(400, "Invalid parameteres!");
+                }
+            }
+            return File(data, System.Net.Mime.MediaTypeNames.Text.Plain, "FolderHierarchy.txt");
         }
     }
 }

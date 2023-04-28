@@ -8,6 +8,6 @@ namespace FHSaverMVC.Repositories
         public Task<Folder> GetByIdAsync(long Id);
         public Task WriteFileAsync(IFormFile file);
         public Task<byte[]> GetAllAsync();
-        public Task<byte[]> GetFileById();
+        public Task<byte[]> GetFileById(long Id);
     }
 }
