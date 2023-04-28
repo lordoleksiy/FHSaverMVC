@@ -5,7 +5,7 @@ using FHSaverMVC.Models;
 using FHSaverMVC.Repositories;
 using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Text;
 
 namespace FHSaverMVC.Controllers
 {
@@ -47,6 +47,12 @@ namespace FHSaverMVC.Controllers
 
             await _repository.WriteFileAsync(file);
             return await IndexAsync(null);
+        }
+
+        public ActionResult DownloadFile(string folderName)
+        {
+            byte[] fileBytes = Encoding.UTF8.GetBytes("Hello World!");
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Plain, folderName+".txt");
         }
     }
 }

@@ -25,7 +25,7 @@
         <div class="uploadSection">
             <form method="post" enctype="multipart/form-data"  action="/Home/UploadFile" class="form">
                 <div class="form-group">
-                    <div for="fileInput">Select a file to upload:</div>
+                    <div for="fileInput" class="inptext">Select a file to upload:</div>
                     <input type="file" class="form-control-file" id="fileInput" name="file" accept=".txt">
                 </div>
                 <button type="submit" class="btn btn-primary">Upload</button>
@@ -33,7 +33,15 @@
         </div>
 
         <div class="exportSection">
-
+            <div class="inptext">Select file to download:</div>
+            <select id="folderchooser" name="folderchooser">
+                @foreach(var folder in Model)
+                {
+                    <option value="@folder.Name">@folder.Name</option>
+                }
+                <option value="All">All</option>
+            </select>
+            <button class="btn btn-primary" id="downloadLink">Download Text File</button>
         </div>
     </div>
 </div>
