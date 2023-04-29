@@ -71,7 +71,7 @@ namespace FHSaverMVC.Repositories
                 return;
             }
 
-            curFolders.ForEach(async name =>
+            foreach (var name in curFolders)
             {
                 var folder = new Folder(name.TrimStart());
                 if (parentFolder != null)
@@ -82,13 +82,19 @@ namespace FHSaverMVC.Repositories
                 _dbContext.Add(folder);
                 folders.Remove(name);
                 await SetFileStructure(folders, spaces + 1, folder);
-            });
+            }
+
         }
         private static int SpacesCount(string item) => item.Length - item.TrimStart().Length;
 
         public async Task<byte[]> GetAllAsync()
         {
-            var rootFolders = await _dbContext.Folders.Include(x => x.Children).Where(x => x.ParentFolderId == null).AsNoTracking().ToListAsync();
+            var rootFolders = await _dbContext.Folders
+                .Include(x => x.Children)
+                .Where(x => x.ParentFolderId == null)
+                .AsNoTracking()
+                .ToListAsync();
+
             var text = await WriteFoldersToStringAsync(rootFolders, "", 0);
             return Encoding.UTF8.GetBytes(text);
         }

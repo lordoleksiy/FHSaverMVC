@@ -1,13 +1,6 @@
-﻿using Azure.Core.GeoJson;
-using FHSaverMVC.Context;
-using FHSaverMVC.Infrastructure;
-using FHSaverMVC.Models;
-using FHSaverMVC.Repositories;
-using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
+﻿using FHSaverMVC.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace FHSaverMVC.Controllers
 {
@@ -58,7 +51,7 @@ namespace FHSaverMVC.Controllers
                 throw new CustomException(400, "Id not found or empty");
             }
 
-            byte[] data = null;
+            byte[] data;
             if (folderName.Equals("All"))
             {
                 data = await _repository.GetAllAsync();
